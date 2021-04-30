@@ -1,6 +1,9 @@
 package com.genus.vt.springweb5;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +33,27 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-        try {
-            file.transferTo(new File("C:\\Users\\Genus\\Downloads\\" + fileName));
-        }catch (IOException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    public String FileUpload(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+            return "redirect:uploadStatus";
         }
-        return ResponseEntity.ok("File uploaded successfully");
+
+        try {
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(up_folder + file.getOriginalFilename());
+            Files.write(path, bytes);
+            redirectAttributes.addFlashAttribute("message",
+                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/uploadStatus";
+    }
+
+    @GetMapping("/uploadStatus")
+    public String uploadStatus() {
+        return "uploadStatus";
     }
 }

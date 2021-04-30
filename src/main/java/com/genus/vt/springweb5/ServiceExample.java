@@ -1,5 +1,6 @@
 package com.genus.vt.springweb5;
 
+import com.genus.vt.springweb5.exception.FileException;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.Patch;

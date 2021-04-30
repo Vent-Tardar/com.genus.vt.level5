@@ -1,4 +1,4 @@
-package com.genus.vt.springweb5;
+package com.genus.vt.springweb5.exception;
 
 import java.io.IOException;
 
